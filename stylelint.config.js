@@ -1,0 +1,17 @@
+module.exports = {
+    "extends": "stylelint-config-standard",
+    "plugins": [
+      "stylelint-scss"
+    ],
+    "rules": {
+      "declaration-empty-line-before": "never",
+      "indentation": 4,
+      "no-missing-end-of-source-newline": null,
+      "property-no-unknown": null,
+      "selector-pseudo-element-colon-notation": "single",
+      "at-rule-no-unknown": null,
+      "scss/at-rule-no-unknown": [true, {
+        ignoreAtRules: ['util'],
+      }]
+    }
+  }
