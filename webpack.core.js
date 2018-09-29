@@ -125,19 +125,25 @@ config.prototype.addStyleConfig = function(mode, basePath = __dirname) {
     return this;
 };
 
-config.prototype.pushRule = function(rule, forDevelopment) {
-    if (forDevelopment) {
+config.prototype.pushRule = function(rule, forDevelopment = undefined) {
+    if (forDevelopment === undefined) {
         this._developmentRules.push(rule);
-    } else {
+        this._productionRules.push(rule);
+    } else if (forDevelopment === true) {
+        this._developmentRules.push(rule);
+    } else if (forDevelopment === false) {
         this._productionRules.push(rule);
     }
     return this;
 };
 
-config.prototype.pushPlugin = function(plugin, forDevelopment) {
-    if (forDevelopment) {
+config.prototype.pushPlugin = function(plugin, forDevelopment = undefined) {
+    if (forDevelopment === undefined) {
         this._developmentPlugins.push(plugin);
-    } else {
+        this._productionPlugins.push(plugin);
+    } else if (forDevelopment === true) {
+        this._developmentPlugins.push(plugin);
+    } else if (forDevelopment === false) {
         this._productionPlugins.push(plugin);
     }
     return this;
@@ -208,12 +214,15 @@ config.prototype.addTypescriptConfig = function(mode) {
             configFile: __dirname + '/tslint.json',
         }
     }
+    var extensions = ['.ts', '.tsx'];
     if (mode === modes.production) {
         this._productionRules.push(rule);
+        this._resolve.extensions = this._resolve.extensions.concat(extensions);
     } 
     if (mode === modes.development) {
         this._developmentRules.push(rule);
         this._developmentRules.push(linter);
+        this._resolve.extensions = this._resolve.extensions.concat(extensions);
     }
     return this;
 }
