@@ -1,6 +1,6 @@
 # Configs
 
-Package containing my base webpack config, and configs for all tools I use.
+Package containing a base webpack config wrapper, and configurations for various tools we use.
 
 ## Installation
 
