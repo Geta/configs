@@ -104,11 +104,11 @@ Alters the default name format of the config from ```[name].js``` to whatever yo
 
 Sets the mode variable on the config, ensuring webpack conventions for dev or production env are added. Also used for the config when differentiating between a development and production config.
 
-### .pushExtension()
+### .pushExtensions()
 
 #### Arguments
 
-* ```extension```: string of the extension type to add, for example ```.md```.
+* ```extensions```: Array of strings for the extension type to add, for example ```.md```. Each string is comma separated infinitely.
 
 #### About
 
@@ -132,17 +132,40 @@ Allows you to override the default target of the config. Default target is ```we
 
 #### About
 
-Adds generic optimizations for production. Currently only contains the ```uglifyjs-webpack-plugin```.
+Adds generic optimizations for production. Currently contains the ```uglifyjs-webpack-plugin``` and ```optimize-css-assets-webpack-plugin```.
 
 ### .addSourceMapsForDevelopment()
 
 #### Arguments
 
 * ```mode```: One of the modes available [here](#valid-modes).
+* ```devtool```: Select one of the devtools available. Defaults to 'source-map'.
 
 #### About
 
 Sets the devtool of the webpack config to ```source-map``` in the development mode.
+
+### .splitBundle()
+
+#### Arguments
+
+* ```name```: Name of the bundle to be split out.
+* ```exp```: Expression for which content to include in the bundle. Defaults to content in node_modules.
+
+#### About
+
+Allows you to split the bundle, based on the regex expression provided.
+
+### .addResolveAlias()
+
+#### Arguments
+
+* ```key```: Name of the alias.
+* ```value```: Value of the alias.
+
+#### About
+
+Allows you to give various libraries aliases, such as $ for jQuery.
 
 ### .addTypescriptConfig()
 
@@ -152,7 +175,7 @@ Sets the devtool of the webpack config to ```source-map``` in the development mo
 
 #### About
 
-Adds TypeScript and TSLint support to the project. If mode is production, linter rule is not added. Also adds ```.ts``` and ```.tsx``` to supported extensions in config.
+Adds TypeScript and TSLint support to the project. If mode is production, linter rule is not added. Also adds ```.ts``` and ```.tsx``` to supported extensions in config. For production mode, it will not type check the TypeScripts, increasing the performance of the build. Also on development mode it will do this, but also run a own service async with the webpack process checking types and linting, allowing it to perform better.
 
 ### .getConfig()
 
