@@ -1,7 +1,7 @@
 {
-  "name": "geta-configs",
+  "name": "geta-webpack-config-wrapper",
   "version": "1.0.0",
-  "description": "Configuration settings used in my projects",
+  "description": "Webpack and tool configurations used to standardize the setup in our projects.",
   "author": "Eirik Horvath",
   "license": "MIT",
   "index": "./webpack.core.js",
