@@ -2,6 +2,9 @@ var path = require('path');
 var ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 var StyleLintPlugin = require('stylelint-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 var modes = {
     production: 'production',
@@ -60,7 +63,9 @@ var config = function(includePaths = undefined, excludePaths = /node_modules/) {
     this._mode = modes.production;
     this._resolve = {
         modules: ["node_modules"],
-        extensions: ['.js', '.jsx', '.json', '.scss', '.css']
+        extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
+        alias: {},
+        plugins: []
     };
     this._include = includePaths;
     this._exclude = excludePaths;
@@ -119,7 +124,7 @@ config.prototype.addStyleConfig = function(mode, basePath = __dirname) {
         this._developmentPlugins.push(extractTextPlugin);
         this._developmentPlugins.push(new StyleLintPlugin({
             files: basePath,
-            configFile: __dirname + '/stylelint.config.js'
+            configFile: path.resolve(__dirname, 'stylelint.config.js')
         }))
     }
     return this;
@@ -169,8 +174,8 @@ config.prototype.setMode = function(mode) {
     return this;
 };
 
-config.prototype.pushExtension = function(extension) {
-    this._resolve.extensions.push(extension);
+config.prototype.pushExtensions = function(...extensions) {
+    this._resolve.extensions = this._resolve.extensions.concat(extensions);
     return this;
 };
 
@@ -186,43 +191,64 @@ config.prototype.applyOptimizationsForProduction = function(mode) {
                 cache: true,
                 parallel: true,
                 sourceMap: false
-            })
+            }),
+            new OptimizeCSSAssetsPlugin({})
         ]
     }
     return this;
 }
 
-config.prototype.addSourceMapsForDevelopment = function(mode) {
+config.prototype.addSourceMapsForDevelopment = function(mode, devtool = 'source-map') {
     if (mode === modes.development) {
-        this._devtool = 'source-map';
+        this._devtool = devtool;
     }
     return this;
 }
 
-config.prototype.addTypescriptConfig = function(mode) {
-    var rule = {
-        test: /\.tsx?$/,
-        use: {
-            loader: 'ts-loader',
-        }
-    };
-    var linter = {
-        test: /\.tsx?$/,
-        enforce: 'pre',
-        loader: 'tslint-loader',
-        options: {
-            configFile: __dirname + '/tslint.json',
+config.prototype.addResolveAlias = function(key, value) {
+    this._resolve.alias[key] = value;
+    return this;
+}
+
+config.prototype.splitBundle = function(name, exp = /[\\/]node_modules[\\/]/) {
+    this._optimization['splitChunks'] = {
+        cacheGroups: {
+            commons: {
+                test: exp,
+                name: name,
+                chunks: 'all'
+            }
         }
     }
+    return this;
+}
+
+config.prototype.addTypescriptConfig = function(mode, configFile = path.resolve(__dirname, 'tsconfig.json')) {
+    var rule = {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        options: {
+            transpileOnly: true
+        }
+    };
     var extensions = ['.ts', '.tsx'];
+    var pathsPlugin = new TsconfigPathsPlugin({ configFile: configFile });
+    var typeCheckerPlugin = new ForkTsCheckerWebpackPlugin(
+        { 
+            tsconfig: configFile,
+            tslint: path.resolve(__dirname, 'tslint.json')
+        }
+    );
+
+    this._resolve.extensions = this._resolve.extensions.concat(extensions);
+    this._resolve.plugins.push(pathsPlugin);
+
     if (mode === modes.production) {
         this._productionRules.push(rule);
-        this._resolve.extensions = this._resolve.extensions.concat(extensions);
     } 
     if (mode === modes.development) {
         this._developmentRules.push(rule);
-        this._developmentRules.push(linter);
-        this._resolve.extensions = this._resolve.extensions.concat(extensions);
+        this._developmentPlugins.push(typeCheckerPlugin);
     }
     return this;
 }
