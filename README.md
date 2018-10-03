@@ -4,11 +4,17 @@ Package containing a base webpack config wrapper, and configurations for various
 
 ## Installation
 
-TODO (when package is published)
+### NPM
 
-## Usage
+```powershell
+npm install --save geta-webpack-config-wrapper
+```
 
-TODO (when package is published)
+### Yarn
+
+```powershell
+yarn add geta-webpack-config-wrapper
+```
 
 ## Includes
 

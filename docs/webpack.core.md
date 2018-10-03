@@ -7,10 +7,11 @@ Generic webpack config wrapper that includes some standard configurations, and a
 To initialize the config builder, simply require the ```webpack.core.js``` file into your webpack.config.js file, and initialize it, for example like this:
 
 ```js
-const Config = require('eirhor-configs/webpack.config.js');
+const Config = require('geta-webpack-config-wrapper');
 
 module.exports = (env) => {
     return new Config()
+        // Add your pipeline functions here.
         .getConfig();
 }
 ```
