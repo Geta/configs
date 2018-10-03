@@ -1,10 +1,22 @@
 {
   "name": "geta-webpack-config-wrapper",
   "version": "1.0.1",
-  "description": "Webpack and tool configurations used to standardize the setup in our projects.",
+  "description": "Webpack and tool configurations used to standardize the setup in projects.",
   "author": "Eirik Horvath",
   "license": "MIT",
   "index": "./webpack.core.js",
+  "homepage": "https://github.com/Geta/webpack-config-wrapper",
+  "bugs": {
+    "url": "https://github.com/owner/project/issues"
+  },
+  "keywords": [
+    "webpack",
+    "config",
+    "wrapper",
+    "geta",
+    "simple",
+    "readable"
+  ],
   "dependencies": {
     "autoprefixer": "^9.1.5",
     "babel": "^6.23.0",
