@@ -159,8 +159,9 @@ config.prototype.addEntry = function(key, value) {
     return this;
 };
 
-config.prototype.setOutputPath = function(path) {
-    this._output.path = path;
+config.prototype.setOutputPath = function(dirName, outputPath, publicPath = undefined) {
+    this._output.path = path.join(dirName, outputPath);
+    this._output.publicPath = publicPath === undefined ? outputPath : publicPath;
     return this;
 };
 

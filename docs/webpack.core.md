@@ -79,7 +79,9 @@ Adds the entry / entries to the webpack config.
 
 #### Arguments
 
-* ```path```: path to use for output from webpack.
+* ```dirName```: Root directory of the web project.
+* ```outputPath```: Path to output directory from root directory.
+* ```publicPath```: Optional, overrides the publicPath (used by some plugins) of the project from the outputPath property if set.
 
 #### About
 
