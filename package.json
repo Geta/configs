@@ -5,7 +5,6 @@
   "author": "Eirik Horvath",
   "license": "MIT",
   "index": "./webpack.core.js",
-  "private": true,
   "dependencies": {
     "autoprefixer": "^9.1.5",
     "babel": "^6.23.0",
