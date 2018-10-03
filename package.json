@@ -1,6 +1,6 @@
 {
   "name": "geta-webpack-config-wrapper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Webpack and tool configurations used to standardize the setup in our projects.",
   "author": "Eirik Horvath",
   "license": "MIT",
