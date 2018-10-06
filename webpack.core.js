@@ -123,7 +123,7 @@ config.prototype.addStyleConfig = function(mode, basePath = __dirname) {
         this._developmentRules.push(rule);
         this._developmentPlugins.push(extractTextPlugin);
         this._developmentPlugins.push(new StyleLintPlugin({
-            files: basePath,
+            context: basePath,
             configFile: path.resolve(__dirname, 'stylelint.config.js')
         }))
     }
@@ -229,7 +229,7 @@ config.prototype.addTypescriptConfig = function(mode, configFile = path.resolve(
         test: /\.tsx?$/,
         loader: 'ts-loader',
         options: {
-            transpileOnly: true
+            transpileOnly: mode !== modes.production
         }
     };
     var extensions = ['.ts', '.tsx'];
