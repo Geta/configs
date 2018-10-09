@@ -224,7 +224,7 @@ config.prototype.splitBundle = function(name, exp = /[\\/]node_modules[\\/]/) {
     return this;
 }
 
-config.prototype.addTypescriptConfig = function(mode, configFile = path.resolve(__dirname, 'tsconfig.json')) {
+config.prototype.addTypescriptConfig = function(mode, tsConfig = path.resolve(__dirname, 'tsconfig.json'), lintConfig = path.resolve(__dirname, 'tslint.json')) {
     var rule = {
         test: /\.tsx?$/,
         loader: 'ts-loader',
@@ -233,11 +233,11 @@ config.prototype.addTypescriptConfig = function(mode, configFile = path.resolve(
         }
     };
     var extensions = ['.ts', '.tsx'];
-    var pathsPlugin = new TsconfigPathsPlugin({ configFile: configFile });
+    var pathsPlugin = new TsconfigPathsPlugin({ configFile: tsConfig });
     var typeCheckerPlugin = new ForkTsCheckerWebpackPlugin(
         { 
-            tsconfig: configFile,
-            tslint: path.resolve(__dirname, 'tslint.json')
+            tsconfig: tsConfig,
+            tslint: lintConfig
         }
     );
 
