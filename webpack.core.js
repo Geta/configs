@@ -5,6 +5,7 @@ var StyleLintPlugin = require('stylelint-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const PrettierPlugin = require('prettier-webpack-plugin');
 
 var modes = {
     production: 'production',
@@ -54,7 +55,7 @@ var applyIncludeExclude = function(rules, include, exclude) {
     return newRules;
 };
 
-var config = function(includePaths = undefined, excludePaths = /node_modules/) {
+var config = function(prettierConfig = path.resolve(__dirname, 'prettier.config.js'), includePaths = undefined, excludePaths = /node_modules/) {
     this._entry = {};
     this._output = {
         path: path.resolve(__dirname, ''),
@@ -69,13 +70,13 @@ var config = function(includePaths = undefined, excludePaths = /node_modules/) {
     };
     this._include = includePaths;
     this._exclude = excludePaths;
-    this._developmentRules = baseRules.concat([{
-        test: /\.tsx?$/,
-        enforce: 'pre',
-        loader: 'prettier-loader',
-    }]);
+    this._developmentRules = baseRules;
     this._productionRules = baseRules;
-    this._developmentPlugins = [];
+    this._developmentPlugins = [
+        new PrettierPlugin({
+            configFile: prettierConfig
+        })
+    ];
     this._productionPlugins = [];
     this._target = 'web';
     this._optimization = {};
