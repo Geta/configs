@@ -10,7 +10,7 @@
       "comment-format": [true, "check-space"],
       "import-blacklist": [true, "rxjs"],
       "interface-over-type-literal": false,
-      "interface-name": true,
+      "interface-name": false,
       "max-line-length": [true, 120],
       "member-access": false,
       "member-ordering": [true, { "order": "fields-first" }],
