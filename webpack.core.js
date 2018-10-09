@@ -55,7 +55,7 @@ var applyIncludeExclude = function(rules, include, exclude) {
     return newRules;
 };
 
-var config = function(prettierConfig = path.resolve(__dirname, 'prettier.config.js'), includePaths = undefined, excludePaths = /node_modules/) {
+var config = function(prettierConfig = path.resolve(__dirname, '.prettierrc'), includePaths = undefined, excludePaths = /node_modules/) {
     this._entry = {};
     this._output = {
         path: path.resolve(__dirname, ''),
