@@ -83,7 +83,7 @@ var config = function(prettierConfig = path.resolve(__dirname, '.prettierrc'), i
     this._devtool = false;
 };
 
-config.prototype.addStyleConfig = function(mode, basePath = __dirname) {
+config.prototype.addStyleConfig = function(mode, basePath = __dirname, styleLintConfigRoot = __dirname) {
     var extractTextPlugin = new ExtractTextWebpackPlugin({
         filename: '[name].css',
     });
@@ -125,7 +125,7 @@ config.prototype.addStyleConfig = function(mode, basePath = __dirname) {
         this._developmentPlugins.push(extractTextPlugin);
         this._developmentPlugins.push(new StyleLintPlugin({
             context: basePath,
-            configFile: path.resolve(__dirname, 'stylelint.config.js')
+            configFile: path.resolve(styleLintConfigRoot, 'stylelint.config.js')
         }))
     }
     return this;
