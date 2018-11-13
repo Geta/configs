@@ -63,7 +63,7 @@ var config = function(prettierConfig = path.resolve(__dirname, '.prettierrc'), i
     };
     this._mode = modes.production;
     this._resolve = {
-        modules: ["node_modules"],
+        modules: ['node_modules'],
         extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
         alias: {},
         plugins: []
@@ -74,7 +74,8 @@ var config = function(prettierConfig = path.resolve(__dirname, '.prettierrc'), i
     this._productionRules = baseRules;
     this._developmentPlugins = [
         new PrettierPlugin({
-            configFile: prettierConfig
+            configFile: prettierConfig,
+            extensions: [ '.graphql', '.js', '.json', '.jsx', '.ts', '.tsx', '.vue', '.yaml' ]
         })
     ];
     this._productionPlugins = [];
@@ -119,7 +120,7 @@ config.prototype.addStyleConfig = function(mode, basePath = __dirname, styleLint
     if (mode === modes.production) {
         this._productionRules.push(rule);
         this._productionPlugins.push(extractTextPlugin);
-    } 
+    }
     if (mode === modes.development) {
         this._developmentRules.push(rule);
         this._developmentPlugins.push(extractTextPlugin);
@@ -236,7 +237,7 @@ config.prototype.addTypescriptConfig = function(mode, tsConfig = path.resolve(__
     var extensions = ['.ts', '.tsx'];
     var pathsPlugin = new TsconfigPathsPlugin({ configFile: tsConfig });
     var typeCheckerPlugin = new ForkTsCheckerWebpackPlugin(
-        { 
+        {
             tsconfig: tsConfig,
             tslint: lintConfig
         }
@@ -247,7 +248,7 @@ config.prototype.addTypescriptConfig = function(mode, tsConfig = path.resolve(__
 
     if (mode === modes.production) {
         this._productionRules.push(rule);
-    } 
+    }
     if (mode === modes.development) {
         this._developmentRules.push(rule);
         this._developmentPlugins.push(typeCheckerPlugin);
