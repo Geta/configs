@@ -1,10 +1,10 @@
-# webpack.core.js
+# index.js
 
 Generic webpack config wrapper that includes some standard configurations, and also adds a ton of pipeline functions to make life easier when managing your webpack config.
 
 ## Init
 
-To initialize the config builder, simply require the ```webpack.core.js``` file into your webpack.config.js file, and initialize it, for example like this:
+To initialize the config builder, simply require the ```index.js``` file into your webpack.config.js file, and initialize it, for example like this:
 
 ```js
 const Config = require('geta-webpack-config-wrapper');

@@ -20,11 +20,11 @@ yarn add geta-webpack-config-wrapper
 
 ### Webpack
 
-For webpack I've created a function, used to wrap the webpack config into a more readable / noob friendly format. It contains a ton of pipeline functions that serve various purposes. Overview of those and what they do can be found here: [webpack.core.js docs](docs/webpack.core.md)
+For webpack I've created a function, used to wrap the webpack config into a more readable / noob friendly format. It contains a ton of pipeline functions that serve various purposes. Overview of those and what they do can be found here: [index.js docs](docs/webpack.core.md)
 
 ### Babel
 
-This one is automatically used by the ```webpack.core.js``` file.
+This one is automatically used by the ```index.js``` file.
 Basic setup that includes the following presets:
 
 * [@babel/preset-env](https://babeljs.io/docs/en/babel-preset-env)
@@ -33,7 +33,7 @@ Basic setup that includes the following presets:
 
 ### PostCSS
 
-Basic setup that adds some postcss transformations to the .scss files used. They're parsed using ```postcss-scss```. The ```webpack.core.js``` implements this by default.
+Basic setup that adds some postcss transformations to the .scss files used. They're parsed using ```postcss-scss```. The ```index.js``` implements this by default.
 
 For plugins I use these:
 
@@ -43,16 +43,16 @@ For plugins I use these:
 
 ### Prettier
 
-Also automatically implemented in webpack.core.js. Adds a basic prettier config to the solution. Currently only parses .ts and .tsx files, will add support for more languages soon-ish.
+Also automatically implemented in index.js. Adds a basic prettier config to the solution. Currently only parses .ts and .tsx files, will add support for more languages soon-ish.
 
 ### Stylelint
 
-Basic implementation of stylelint, extending the ```stylelint-config-standard``` with some extra rules / overrides I found useful. Support for scss added. Implemented by default in ```webpack.core.js```.
+Basic implementation of stylelint, extending the ```stylelint-config-standard``` with some extra rules / overrides I found useful. Support for scss added. Implemented by default in ```index.js```.
 
 ### TypeScript
 
-For all my projects I use TypeScript, thus I've included a basic config file for it. This one already covers enough to be used on most projects, but can also be extended if you want to override or add additional options. To enable typescript in ```webpack.core.js```, see the [webpack.core.js docs](docs/webpack.core.md).
+For all my projects I use TypeScript, thus I've included a basic config file for it. This one already covers enough to be used on most projects, but can also be extended if you want to override or add additional options. To enable typescript in ```index.js```, see the [index.js docs](docs/webpack.core.md).
 
 ### TSLint
 
-Since most of my projects use TypeScript, I also added my generic tslint config. It support extending in your own tslint config if you so wish. This one is also configured to work well with the Prettier config, so no weird conflicts occur between the auto formatting and the linter. Auto implemented in ```webpack.core.js``` when TypeScript is added, for dev mode only.
+Since most of my projects use TypeScript, I also added my generic tslint config. It support extending in your own tslint config if you so wish. This one is also configured to work well with the Prettier config, so no weird conflicts occur between the auto formatting and the linter. Auto implemented in ```index.js``` when TypeScript is added, for dev mode only.
