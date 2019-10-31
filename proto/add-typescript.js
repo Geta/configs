@@ -7,6 +7,7 @@ function getTsCheckerOptions(mode) {
         return {
             eslint: true,
             memoryLimit: 4096,
+            useTypescriptIncrementalApi: true,
         };
     }
 
