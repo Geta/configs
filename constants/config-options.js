@@ -1,5 +1,5 @@
-const modes = require('modes');
-const bundleTypes = require('bundle-types');
+const modes = require('./modes');
+const bundleTypes = require('./bundle-types');
 
 module.exports = {
     root: __dirname,
