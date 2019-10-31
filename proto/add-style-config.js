@@ -38,10 +38,9 @@ module.exports = function(
             {
                 loader: 'sass-loader',
                 options: {
-                    options: {
-                        sourceMap: mode === 'development' ? 'inline' : false,
-                        outputStyle: mode === 'development' ? 'expanded' : 'compressed',
-                    },
+                    implementation: require('node-sass'),
+                    sourceMap: mode === 'development' ? 'inline' : false,
+                    outputStyle: mode === 'development' ? 'expanded' : 'compressed',
                 },
             },
         ],
