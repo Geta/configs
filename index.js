@@ -22,6 +22,7 @@ const addHtmlTransformer = require('./proto/add-html-transformer');
 const defaultHtmlTransformerOptions = require('./constants/html-transformer-options');
 const addCdn = require('./proto/add-cdn');
 const addStats = require('./proto/add-stats');
+const pushResolvePlugin = require('./proto/push-resolve-plugin');
 
 const defaultRules = [
     {
@@ -186,6 +187,11 @@ config.prototype.addCdn = function(modules = []) {
 
 config.prototype.addStats = function() {
     addStats(this, this._mode);
+    return this;
+};
+
+config.prototype.pushResolvePlugin = function(plugin) {
+    pushResolvePlugin(this, plugin);
     return this;
 };
 
