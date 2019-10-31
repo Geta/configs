@@ -21,7 +21,7 @@ module.exports = function(
             {
                 loader: MiniCssExtractPlugin.loader,
                 options: {
-                    hmr: mode === 'development',
+                    hmr: mode === modes.development,
                 },
             },
             {
@@ -39,8 +39,7 @@ module.exports = function(
                 loader: 'sass-loader',
                 options: {
                     implementation: require('node-sass'),
-                    sourceMap: mode === 'development' ? 'inline' : false,
-                    outputStyle: mode === 'development' ? 'expanded' : 'compressed',
+                    sourceMap: mode === modes.development,
                 },
             },
         ],

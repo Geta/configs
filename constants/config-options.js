@@ -5,6 +5,6 @@ module.exports = {
     root: __dirname,
     mode: modes.development,
     bundleType: bundleTypes.client,
-    includePaths: undefined,
+    includePaths: null,
     excludePaths: /node_modules/,
 };

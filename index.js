@@ -23,6 +23,7 @@ const defaultHtmlTransformerOptions = require('./constants/html-transformer-opti
 const addCdn = require('./proto/add-cdn');
 const addStats = require('./proto/add-stats');
 const pushResolvePlugin = require('./proto/push-resolve-plugin');
+const assign = require('nested-object-assign');
 
 const defaultRules = [
     {
@@ -73,8 +74,8 @@ var config = function(options = defaultConfigOptions) {
         alias: {},
         plugins: [],
     };
-    this._include = options.includePaths;
-    this._exclude = options.excludePaths;
+    this._include = !options.includePaths ? defaultConfigOptions.includePaths : options.includePaths;
+    this._exclude = !options.excludePaths ? defaultConfigOptions.excludePaths : options.excludePaths;
     this._developmentRules = defaultRules;
     this._productionRules = defaultRules;
     this._developmentPlugins = [];
@@ -85,6 +86,7 @@ var config = function(options = defaultConfigOptions) {
 };
 
 config.prototype.addStyleConfig = function(options = defaultStyleConfigOptions) {
+    options = assign({}, defaultStyleConfigOptions, options);
     addStyleConfig(this, this._mode, options.postCssConfigPath, options.styleLintConfigPath);
     return this;
 };
@@ -105,6 +107,7 @@ config.prototype.addEntry = function(key, value) {
 };
 
 config.prototype.setOutput = function(options = defaultOutputOptions) {
+    options = assign({}, defaultOutputOptions, options);
     setOutput(this, options.outputPath, options.publicPath, options.nameFormat);
     return this;
 };
@@ -150,6 +153,7 @@ config.prototype.addBabel = function() {
 };
 
 config.prototype.addShellRunner = function(options = defaultShellRunnerOptions) {
+    options = assign({}, defaultShellRunnerOptions, options);
     addShellRunner(
         this,
         this._mode,
@@ -167,6 +171,7 @@ config.prototype.addFileCopy = function(...rules) {
 };
 
 config.prototype.addHtmlTransformer = function(options = defaultHtmlTransformerOptions) {
+    options = assign({}, defaultHtmlTransformerOptions, options);
     addHtmlTransformer(
         this,
         this._mode,
