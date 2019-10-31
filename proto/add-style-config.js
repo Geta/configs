@@ -47,6 +47,9 @@ module.exports = function(
         ],
     };
 
+    context._resolve.extensions.push('.css');
+    context._resolve.extensions.push('.scss');
+
     if (mode === modes.production) {
         context._productionRules.push(rule);
         context._productionPlugins.push(miniCssExtractPlugin);

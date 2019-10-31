@@ -1,8 +1,3 @@
-var path = require('path');
-var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const defaultConfigOptions = require('./constants/config-options');
 const defaultStyleConfigOptions = require('./constants/style-config-options');
 const defaultOutputOptions = require('./constants/output-options');
@@ -15,11 +10,18 @@ const pushExtensions = require('./proto/push-extensions');
 const setTarget = require('./proto/set-target');
 const withOptimizations = require('./proto/with-optimizations');
 const withDevtools = require('./proto/with-devtools');
-
-const modes = {
-    production: 'production',
-    development: 'development',
-};
+const addAlias = require('./proto/add-alias');
+const splitChunks = require('./proto/split-chunks');
+const addTypeScript = require('./proto/add-typescript');
+const addBabel = require('./proto/add-babel');
+const modes = require('./constants/modes');
+const addShellRunner = require('./proto/add-shell-runner');
+const defaultShellRunnerOptions = require('./constants/shell-runner-options');
+const addFileCopy = require('./proto/add-file-copy');
+const addHtmlTransformer = require('./proto/add-html-transformer');
+const defaultHtmlTransformerOptions = require('./constants/html-transformer-options');
+const addCdn = require('./proto/add-cdn');
+const addStats = require('./proto/add-stats');
 
 const defaultRules = [
     {
@@ -62,10 +64,11 @@ var config = function(options = defaultConfigOptions) {
     this._context = options.root;
     this._entry = {};
     this._output = {};
-    this._mode = modes.production;
+    this._mode = options.mode;
+    this._bundleType = options.bundleType;
     this._resolve = {
         modules: ['node_modules'],
-        extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
+        extensions: ['.json', '.svg', '.woff', '.woff2', '.eot', '.gif', '.ttf', '.cur', '.png'],
         alias: {},
         plugins: [],
     };
@@ -126,57 +129,69 @@ config.prototype.withDevtools = function() {
 };
 
 config.prototype.addResolveAlias = function(key, value) {
-    this._resolve.alias[key] = value;
+    addAlias(this, key, value);
     return this;
 };
 
-config.prototype.splitBundle = function(name, exp = /[\\/]node_modules[\\/]/) {
-    this._optimization['splitChunks'] = {
-        cacheGroups: {
-            commons: {
-                test: exp,
-                name: name,
-                chunks: 'all',
-            },
-        },
-    };
+config.prototype.splitChunks = function(name, exp = /[\\/]node_modules[\\/]/) {
+    splitChunks(this, name, exp);
     return this;
 };
 
-config.prototype.addTypescriptConfig = function(
-    mode,
-    tsConfig = path.resolve(__dirname, 'tsconfig.json'),
-    lintConfig = path.resolve(__dirname, 'tslint.json')
-) {
-    var rule = {
-        test: /\.tsx?$/,
-        loader: 'ts-loader',
-        options: {
-            transpileOnly: mode !== modes.production,
-        },
-    };
-    var extensions = ['.ts', '.tsx'];
-    var pathsPlugin = new TsconfigPathsPlugin({ configFile: tsConfig });
-    var typeCheckerPlugin = new ForkTsCheckerWebpackPlugin({
-        tsconfig: tsConfig,
-        tslint: lintConfig,
-    });
-
-    this._resolve.extensions = this._resolve.extensions.concat(extensions);
-    this._resolve.plugins.push(pathsPlugin);
-
-    if (mode === modes.production) {
-        this._productionRules.push(rule);
-    }
-    if (mode === modes.development) {
-        this._developmentRules.push(rule);
-        this._developmentPlugins.push(typeCheckerPlugin);
-    }
+config.prototype.addTypeScript = function() {
+    addTypeScript(this, this._mode);
     return this;
 };
 
-config.prototype.getConfig = function() {
+config.prototype.addBabel = function() {
+    addBabel(this, this._mode);
+    return this;
+};
+
+config.prototype.addShellRunner = function(options = defaultShellRunnerOptions) {
+    addShellRunner(
+        this,
+        this._mode,
+        this._bundleType,
+        options.onBuildStart,
+        options.onBuildEnd,
+        options.verbose
+    );
+    return this;
+};
+
+config.prototype.addFileCopy = function(...rules) {
+    addFileCopy(this, this._mode, this._bundleType, rules);
+    return this;
+};
+
+config.prototype.addHtmlTransformer = function(options = defaultHtmlTransformerOptions) {
+    addHtmlTransformer(
+        this,
+        this._mode,
+        this._bundleType,
+        options.source,
+        options.dest,
+        options.excludeAssets,
+        options.destFileName,
+        options.withReactInit
+    );
+    return this;
+};
+
+config.prototype.addCdn = function(modules = []) {
+    addCdn(this, this._mode, this._bundleType, modules);
+    return this;
+};
+
+config.prototype.addStats = function() {
+    addStats(this, this._mode);
+    return this;
+};
+
+config.prototype.getConfig = config.prototype.getConfig = function() {
     return {
+        context: this._context,
         entry: this._entry,
         output: this._output,
         mode: this._mode,
@@ -190,7 +205,6 @@ config.prototype.getConfig = function() {
         plugins:
             this._mode === modes.production ? this._productionPlugins : this._developmentPlugins,
         watch: this._mode !== modes.production,
-        context: __dirname,
         target: this._target,
         devtool: this._devtool,
         optimization: this._optimization,
