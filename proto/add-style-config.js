@@ -11,8 +11,6 @@ module.exports = function(context, mode, postCssConfigPath, styleLintConfigPath,
 
     const rule = {
         test: /\.s?css$/,
-        include: include,
-        exclude: exclude,
         use: [
             {
                 loader: MiniCssExtractPlugin.loader,
@@ -40,6 +38,14 @@ module.exports = function(context, mode, postCssConfigPath, styleLintConfigPath,
             },
         ],
     };
+
+    if (include) {
+        rule['include'] = include;
+    }
+
+    if (exclude) {
+        rule['exclude'] = exclude;
+    }
 
     context._resolve.extensions.push('.css');
     context._resolve.extensions.push('.scss');

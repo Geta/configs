@@ -1,8 +1,8 @@
-const assign = require('nested-object-assign');
 const path = require('path');
-const includeExclude = require('./include-exclude-options');
 
-module.exports = assign({}, includeExclude, {
+module.exports = {
     postCssConfigPath: path.resolve(__dirname, '../configs'),
     styleLintConfigPath: path.resolve(__dirname, '../configs/stylelint.config.js'),
-});
+    include: null,
+    exclude: /node_modules/,
+};

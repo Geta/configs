@@ -26,13 +26,19 @@ module.exports = function(context, mode, include, exclude) {
     });
     const tsLoaderRule = {
         test: /\.tsx?$/,
-        include: include,
-        exclude: exclude,
         loader: 'ts-loader',
         options: {
             transpileOnly: true,
         },
     };
+
+    if (include) {
+        tsLoaderRule['include'] = include;
+    }
+
+    if (exclude) {
+        tsLoaderRule['exclude'] = exclude;
+    }
 
     context._resolve.extensions.push('.tsx');
     context._resolve.extensions.push('.ts');

@@ -27,11 +27,8 @@ const assign = require('nested-object-assign');
 const defaultIncludeExcludeOptions = require('./constants/include-exclude-options');
 
 function defaultRules(options = defaultIncludeExcludeOptions) {
-    return [
-        {
+    const assetsRule = {
             test: /\.(svg|woff|woff2|eot|gif|ttf|cur|png)$/,
-            include: options.include,
-            exclude: options.exclude,
             use: {
                 loader: 'url-loader',
                 options: {
@@ -39,7 +36,18 @@ function defaultRules(options = defaultIncludeExcludeOptions) {
                     limit: 10000,
                 },
             },
-        },
+        };
+
+    if (options.include) {
+        assetsRule['include'] = options.include;
+    }
+
+    if (options.exclude) {
+        assetsRule['exclude'] = options.exclude;
+    }
+
+    return [
+        assetsRule
     ];
 }
 
@@ -65,8 +73,15 @@ var config = function(options = defaultConfigOptions) {
 };
 
 config.prototype.addStyleConfig = function(options = defaultStyleConfigOptions) {
-    options = assign({}, defaultStyleConfigOptions, options);
-    addStyleConfig(this, this._mode, options.postCssConfigPath, options.styleLintConfigPath, options.include, options.exclude);
+    const transformedOptions = assign({}, defaultStyleConfigOptions, options);
+    if (options.include) {
+        transformedOptions['include'] = options.include;
+    }
+    if (options.exclude) {
+        transformedOptions['exclude'] = options.exclude;
+    }
+
+    addStyleConfig(this, this._mode, transformedOptions.postCssConfigPath, transformedOptions.styleLintConfigPath, transformedOptions.include, transformedOptions.exclude);
     return this;
 };
 

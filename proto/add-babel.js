@@ -4,9 +4,15 @@ module.exports = function(context, mode, include, exclude) {
     const babelRule = {
         test: /\.jsx?$/,
         use: 'babel-loader',
-        include: include,
-        exclude: exclude,
     };
+
+    if (include) {
+        babelRule['include'] = include;
+    }
+
+    if (exclude) {
+        babelRule['exclude'] = exclude;
+    }
 
     context._resolve.extensions.push('.jsx');
     if (context._resolve.extensions.indexOf('.js') === -1) {
