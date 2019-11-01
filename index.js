@@ -24,43 +24,24 @@ const addCdn = require('./proto/add-cdn');
 const addStats = require('./proto/add-stats');
 const pushResolvePlugin = require('./proto/push-resolve-plugin');
 const assign = require('nested-object-assign');
+const defaultIncludeExcludeOptions = require('./constants/include-exclude-options');
 
-const defaultRules = [
-    {
-        test: /\.(svg|woff|woff2|eot|gif|ttf|cur|png)$/,
-        use: {
-            loader: 'url-loader',
-            options: {
-                name: 'static/[name].[hash].[ext]',
-                limit: 10000,
+function defaultRules(options = defaultIncludeExcludeOptions) {
+    return [
+        {
+            test: /\.(svg|woff|woff2|eot|gif|ttf|cur|png)$/,
+            include: options.include,
+            exclude: options.exclude,
+            use: {
+                loader: 'url-loader',
+                options: {
+                    name: 'static/[name].[hash].[ext]',
+                    limit: 10000,
+                },
             },
         },
-    },
-];
-
-const applyIncludeExclude = function(rules, include, exclude) {
-    if (!rules || rules.length === 0 || (!include && !exclude)) {
-        return;
-    }
-
-    var newRules = [];
-
-    for (let i = 0; i < rules.length; i++) {
-        var clonedRule = rules[i];
-
-        if (include) {
-            clonedRule['include'] = include;
-        }
-
-        if (exclude) {
-            clonedRule['exclude'] = exclude;
-        }
-
-        newRules.push(clonedRule);
-    }
-
-    return newRules;
-};
+    ];
+}
 
 var config = function(options = defaultConfigOptions) {
     this._context = options.root;
@@ -74,10 +55,8 @@ var config = function(options = defaultConfigOptions) {
         alias: {},
         plugins: [],
     };
-    this._include = !options.includePaths ? defaultConfigOptions.includePaths : options.includePaths;
-    this._exclude = !options.excludePaths ? defaultConfigOptions.excludePaths : options.excludePaths;
-    this._developmentRules = defaultRules;
-    this._productionRules = defaultRules;
+    this._developmentRules = defaultRules(options);
+    this._productionRules = defaultRules(options);
     this._developmentPlugins = [];
     this._productionPlugins = [];
     this._target = 'web';
@@ -87,7 +66,7 @@ var config = function(options = defaultConfigOptions) {
 
 config.prototype.addStyleConfig = function(options = defaultStyleConfigOptions) {
     options = assign({}, defaultStyleConfigOptions, options);
-    addStyleConfig(this, this._mode, options.postCssConfigPath, options.styleLintConfigPath);
+    addStyleConfig(this, this._mode, options.postCssConfigPath, options.styleLintConfigPath, options.include, options.exclude);
     return this;
 };
 
@@ -142,13 +121,13 @@ config.prototype.splitChunks = function(name, exp = /[\\/]node_modules[\\/]/) {
     return this;
 };
 
-config.prototype.addTypeScript = function() {
-    addTypeScript(this, this._mode);
+config.prototype.addTypeScript = function(options = defaultIncludeExcludeOptions) {
+    addTypeScript(this, this._mode, options.include, options.exclude);
     return this;
 };
 
-config.prototype.addBabel = function() {
-    addBabel(this, this._mode);
+config.prototype.addBabel = function(options = defaultIncludeExcludeOptions) {
+    addBabel(this, this._mode, options.include, options.exclude);
     return this;
 };
 
@@ -208,10 +187,7 @@ config.prototype.getConfig = config.prototype.getConfig = function() {
         mode: this._mode,
         resolve: this._resolve,
         module: {
-            rules:
-                this._mode === modes.production
-                    ? applyIncludeExclude(this._productionRules, this._include, this._exclude)
-                    : applyIncludeExclude(this._developmentRules, this._include, this._exclude),
+            rules: this._mode === modes.production ? this._productionRules : this._developmentRules,
         },
         plugins:
             this._mode === modes.production ? this._productionPlugins : this._developmentPlugins,

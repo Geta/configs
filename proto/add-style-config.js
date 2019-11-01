@@ -1,14 +1,8 @@
 const modes = require('../constants/modes');
-const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 
-module.exports = function(
-    context,
-    mode,
-    postCssConfigPath,
-    styleLintConfigPath = path.resolve(__dirname, '../configs/stylelint.config.js')
-) {
+module.exports = function(context, mode, postCssConfigPath, styleLintConfigPath, include, exclude) {
     const miniCssExtractPlugin = new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFileName: '[id].css',
@@ -17,6 +11,8 @@ module.exports = function(
 
     const rule = {
         test: /\.s?css$/,
+        include: include,
+        exclude: exclude,
         use: [
             {
                 loader: MiniCssExtractPlugin.loader,

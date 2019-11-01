@@ -1,10 +1,10 @@
 const modes = require('./modes');
 const bundleTypes = require('./bundle-types');
+const includeExclude = require('./include-exclude-options');
+const assign = require('nested-object-assign');
 
-module.exports = {
+module.exports = assign({}, includeExclude, {
     root: __dirname,
     mode: modes.development,
     bundleType: bundleTypes.client,
-    includePaths: null,
-    excludePaths: /node_modules/,
-};
+});

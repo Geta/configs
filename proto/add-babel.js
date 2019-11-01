@@ -1,9 +1,11 @@
 const modes = require('../constants/modes');
 
-module.exports = function(context, mode) {
+module.exports = function(context, mode, include, exclude) {
     const babelRule = {
         test: /\.jsx?$/,
         use: 'babel-loader',
+        include: include,
+        exclude: exclude,
     };
 
     context._resolve.extensions.push('.jsx');

@@ -18,7 +18,7 @@ function getTsCheckerOptions(mode) {
     };
 }
 
-module.exports = function(context, mode) {
+module.exports = function(context, mode, include, exclude) {
     const tsCheckerPlugin = new TsCheckerPlugin(getTsCheckerOptions(mode));
     const tsCheckerNotifierPlugin = new TsCheckerNotifierPlugin({
         title: 'TypeScript',
@@ -26,6 +26,8 @@ module.exports = function(context, mode) {
     });
     const tsLoaderRule = {
         test: /\.tsx?$/,
+        include: include,
+        exclude: exclude,
         loader: 'ts-loader',
         options: {
             transpileOnly: true,
