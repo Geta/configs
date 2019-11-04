@@ -135,7 +135,7 @@ Allows you to override the default target of the config. Default target is ```we
 
 #### About
 
-Adds generic optimizations for production. Currently contains the ```uglifyjs-webpack-plugin``` and ```optimize-css-assets-webpack-plugin```.
+Adds generic optimizations for production. Currently contains the ```terser-webpack-plugin``` and ```optimize-css-assets-webpack-plugin```.
 
 ### .addSourceMapsForDevelopment()
 
