@@ -132,7 +132,7 @@ config.prototype.addResolveAlias = function(key, value) {
 };
 
 config.prototype.splitChunks = function(name, exp = /[\\/]node_modules[\\/]/) {
-    splitChunks(this, name, exp);
+    splitChunks(this, this._bundleType, name, exp);
     return this;
 };
 
